@@ -1,0 +1,6 @@
+{
+  "name": "Smart Asset Studio",
+  "description": "Transform PNG images into smart interactive assets with AI metadata, vector tracing, layer isolation, variant generation, and Google Drive integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

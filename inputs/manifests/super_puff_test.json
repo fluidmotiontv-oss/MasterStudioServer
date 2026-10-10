@@ -1,0 +1,19 @@
+{
+  "project": "Super Puff",
+  "episode": "01_dry_run",
+  "audio_tuning": "432Hz",
+  "voice_engine": "ElevenLabs",
+  "visual_engine": "Midjourney",
+  "scenes": [
+    {
+      "scene_id": "001",
+      "action": "Character walks on stage, adjusts mic.",
+      "dialogue": "So, I was looking at the fluid motion of the future today..."
+    },
+    {
+      "scene_id": "002",
+      "action": "Crowd reacts. Close up on character.",
+      "dialogue": "And let me tell you, it's rendering perfectly."
+    }
+  ]
+}
