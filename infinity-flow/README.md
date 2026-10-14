@@ -1,11 +1,32 @@
-# The Druids Lotion of Kombucha - Infinity Flow
+# Infinity Flow 3D
 
-Next-generation spatial 3D interface engine featuring Holocraft-style touch controls, WebGL fragment shaders (432Hz harmonic themes), Web Bluetooth biometric bridging, and offline PWA support.
+**Space you can touch. Flow you can feel.**
+Flagship spatial interface engine from Fluid Motion TV / Dragon Nine.
 
-## Features
-- **Spatial Touch & Inertia Physics:** Momentum-based 3D viewport navigation.
-- **Biometric Bridge:** Real-time heart rate sensor synchronization via Web Bluetooth.
-- **Offline PWA:** Installable standalone architecture with zero app-store gatekeepers.
+## What it is
+- Spatial 3D interface engine — WebGL fragment shaders tuned to **432 Hz harmonic themes**
+- **Holocraft-style touch & inertia physics** — momentum-based viewport navigation
+- **Web Bluetooth biometric bridge** — real-time heart-rate sensor sync in the browser
+- **Offline installable PWA** — zero app-store gatekeepers, runs with no signal
+- Vite + Three.js, modular source
 
-## Licensing & Acquisition
-Available for commercial and enterprise licensing. Secure checkout via PayPal (`fluidmotion.tv@gmail.com`). Visit [the store page](https://fluidmotiontv-oss.github.io/Infinity-Flow/store.html) to acquire the source code bundle.
+## Run it
+    npm install
+    npm run build   # → dist/
+    npm run dev     # local dev server
+
+## Get it
+| Tier | Price | Scope |
+|---|---|---|
+| Personal | US$49 | personal use, all your devices |
+| Studio | US$149 | commercial client work |
+| Source | US$540 | full source bundle, white-label, resell |
+| Enterprise | US$1,800 | source + biometric integration support + direct line |
+
+PayPal: **fluidmotion.tv@gmail.com** — include your tier in the payment note.
+
+Store: https://fluidmotiontv-oss.github.io/Infinity-Flow/store.html
+Live demo: https://fluidmotiontv-oss.github.io/Infinity-Flow/
+
+## License
+© 2026 Fluid Motion TV · Dragon Nine. Licensed per tier above.

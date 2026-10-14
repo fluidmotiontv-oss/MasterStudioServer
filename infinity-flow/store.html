@@ -1,40 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Druids Lotion of Kombucha - Official Release</title>
-    <style>
-        body { margin: 0; padding: 0; background: #080e18; color: #fff; font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: min-height: 100vh; padding: 40px 20px; }
-        .card { max-width: 600px; background: rgba(13, 27, 42, 0.85); border: 1px solid rgba(64, 145, 108, 0.5); padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); backdrop-filter: blur(12px); text-align: center; }
-        h1 { color: #52b788; font-size: 28px; margin-bottom: 10px; }
-        p.subtitle { color: #94d2bd; font-size: 15px; margin-bottom: 30px; line-height: 1.5; }
-        .price { font-size: 36px; font-weight: bold; color: #e9d8a6; margin-bottom: 20px; }
-        .features { text-align: left; margin: 20px 0 30px 0; padding-left: 20px; color: #ced4da; font-size: 14px; line-height: 1.8; }
-        .cta-btn { background: linear-gradient(135deg, #0070ba, #003087); color: #fff; border: 1px solid #52b788; padding: 16px 36px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s ease; box-shadow: 0 6px 20px rgba(0, 112, 186, 0.4); }
-        .cta-btn:hover { background: linear-gradient(135deg, #005ea6, #002266); transform: translateY(-2px); }
-        .footer-note { margin-top: 25px; font-size: 12px; color: #6c757d; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Infinity Flow 3D — store · Fluid Motion TV</title>
+<meta name="description" content="Infinity Flow 3D: the spatial interface engine with 432Hz harmonic shaders, Holocraft touch inertia, and Web Bluetooth biometrics. Installable. Offline. No app store.">
+<meta name="theme-color" content="#0b0b14">
+<style>
+  :root { --bg:#0b0b14; --panel:#12121f; --line:#23233a; --text:#e8e8f5; --dim:#9a9ab8; --a1:#7c5cff; --a2:#22d3ee; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.6; }
+  a { color:var(--a2); text-decoration:none; } a:hover { text-decoration:underline; }
+  .wrap { max-width:920px; margin:0 auto; padding:0 20px; }
+  nav { display:flex; justify-content:space-between; align-items:center; padding:18px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  nav .brand { color:var(--text); font-weight:600; letter-spacing:.02em; }
+  nav .brand span { color:var(--dim); font-weight:400; }
+  .hero { text-align:center; padding:72px 0 48px; }
+  .hero .tag { color:var(--a2); font-size:13px; letter-spacing:.28em; text-transform:uppercase; }
+  .hero h1 { font-size:clamp(34px,6vw,56px); line-height:1.08; margin:14px 0 10px; font-weight:700; }
+  .hero h1 em { font-style:normal; background:linear-gradient(90deg,var(--a1),var(--a2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p { color:var(--dim); max-width:560px; margin:0 auto; font-size:17px; }
+  .cta-row { margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn { display:inline-block; padding:13px 26px; border-radius:10px; font-weight:600; font-size:15px; }
+  .btn-primary { background:linear-gradient(90deg,var(--a1),var(--a2)); color:#06060d; }
+  .btn-ghost { border:1px solid var(--line); color:var(--text); }
+  .btn:hover { text-decoration:none; filter:brightness(1.12); }
+  section { padding:44px 0; border-top:1px solid var(--line); }
+  h2 { font-size:26px; margin-bottom:6px; } .sub { color:var(--dim); margin-bottom:26px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px; }
+  .card h3 { font-size:16px; margin-bottom:6px; } .card p { color:var(--dim); font-size:14px; }
+  .freq { color:var(--a2); font-size:12px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:8px; display:block; }
+  .tiers { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+  .tier { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:24px; display:flex; flex-direction:column; }
+  .tier.hot { border-color:var(--a1); }
+  .tier h3 { font-size:17px; } .price { font-size:34px; font-weight:700; margin:10px 0 2px; }
+  .price small { font-size:14px; color:var(--dim); font-weight:400; }
+  .tier ul { list-style:none; margin:14px 0 20px; color:var(--dim); font-size:14px; flex:1; }
+  .tier li { padding:4px 0 4px 20px; position:relative; }
+  .tier li::before { content:"◆"; position:absolute; left:0; color:var(--a2); font-size:10px; top:9px; }
+  .tier .btn { text-align:center; }
+  .note { color:var(--dim); font-size:13px; margin-top:14px; }
+  ol.steps { margin-left:20px; color:var(--dim); } ol.steps li { margin:6px 0; }
+  code { background:#1a1a2c; padding:2px 7px; border-radius:6px; font-size:13px; color:var(--a2); }
+  footer { border-top:1px solid var(--line); padding:28px 0 44px; color:var(--dim); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+</style>
 </head>
 <body>
-    <div class="card">
-        <h1>The Druids Lotion of Kombucha</h1>
-        <p class="subtitle">Next-Generation Spatial Touch & Biometric 3D Interface Engine</p>
-        <div class="price">$1,500 <span style="font-size: 14px; color: #adb5bd;">USD / Enterprise License</span></div>
-        
-        <ul class="features">
-            <li>✨ <strong>WebGL Lemniscate Flow Shaders:</strong> Organic, fluid 3D motion dynamics.</li>
-            <li>✨ <strong>Inertial Touch Physics:</strong> Momentum-based panning, zooming, and rotation.</li>
-            <li>✨ <strong>Web Bluetooth Biometrics:</strong> Real-time heart rate sensor synchronization.</li>
-            <li>✨ <strong>Offline PWA Architecture:</strong> Instant installable deployment with zero app-store gatekeepers.</li>
-        </ul>
-
-        <!-- Direct PayPal.Me / Business Checkout Link -->
-        <a href="https://www.paypal.com/paypalme/fluidmotion/1500" class="cta-btn" target="_blank">
-            Pay with PayPal ($1,500 USD)
-        </a>
-        
-        <p class="footer-note">Secure payment via PayPal (fluidmotion.tv@gmail.com). Instant digital source code delivery upon transaction confirmation.</p>
+<div class="wrap">
+  <nav>
+    <div class="brand">Infinity Flow 3D <span>· by Fluid Motion TV</span></div>
+    <div><a href="https://github.com/fluidmotiontv-oss/Infinity-Flow">GitHub</a> · <a href="./index.html">Live demo</a></div>
+  </nav>
+  <header class="hero">
+    <div class="tag">Fluid motion of the future</div>
+    <h1>Space you can <em>touch</em>.<br>Flow you can <em>feel</em>.</h1>
+    <p>Infinity Flow 3D is a spatial interface engine — WebGL fragment shaders tuned to 432&nbsp;Hz harmonic themes, momentum touch physics, and live biometric bridging. It installs from a URL, works offline, and answers to no app store.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="./index.html">Launch the live demo</a>
+      <a class="btn btn-ghost" href="#licenses">Get a license</a>
     </div>
+  </header>
+  <section>
+    <h2>What it does</h2>
+    <p class="sub">Built as the flagship of the Dragon Nine studio fleet — now licensing to builders.</p>
+    <div class="grid">
+      <div class="card"><span class="freq">Spatial engine</span><h3>Momentum touch &amp; inertia</h3><p>Holocraft-style navigation physics. Flick, drift, settle — the viewport behaves like matter, not a webpage.</p></div>
+      <div class="card"><span class="freq">Harmonic render</span><h3>432&nbsp;Hz shader themes</h3><p>Fragment-shader color systems tuned on Pythagorean harmonic ratios. The visuals are literally in tune.</p></div>
+      <div class="card"><span class="freq">Biometric bridge</span><h3>Web Bluetooth sync</h3><p>Pair a heart-rate sensor and the flow responds to the wearer in real time. No native SDK required.</p></div>
+      <div class="card"><span class="freq">Sovereign by design</span><h3>Installable offline PWA</h3><p>Adds to home screen on phone or desktop, caches its shell, runs with zero signal. Zero app-store gatekeepers.</p></div>
+      <div class="card"><span class="freq">One codebase</span><h3>Every device</h3><p>iOS, Android, Windows, macOS, Linux — one URL, one engine. Ship once, reach everything with a browser.</p></div>
+      <div class="card"><span class="freq">Yours to extend</span><h3>Clean Three.js core</h3><p>Vite + Three.js, modular and readable. License the source and bend the flow to your own product.</p></div>
+    </div>
+  </section>
+  <section id="licenses">
+    <h2>Licenses</h2>
+    <p class="sub">One-time payment. PayPal secure checkout. License delivered by email within 24&nbsp;hours.</p>
+    <div class="tiers">
+      <div class="tier">
+        <h3>Personal</h3>
+        <div class="price">US$49</div>
+        <ul>
+          <li>Installable engine, all devices you own</li>
+          <li>Offline shell &amp; shader themes</li>
+          <li>Personal projects &amp; portfolios</li>
+          <li>Community support</li>
+        </ul>
+        <a class="btn btn-ghost" href="mailto:fluidmotion.tv@gmail.com?subject=Infinity%20Flow%203D%20—%20Personal%20license">Buy via PayPal</a>
+      </div>
+      <div class="tier">
+        <h3>Studio</h3>
+        <div class="price">US$149</div>
+        <ul>
+          <li>Everything in Personal</li>
+          <li>Commercial client work</li>
+          <li>Priority feature requests</li>
+          <li>Early access to new flows</li>
+        </ul>
+        <a class="btn btn-ghost" href="mailto:fluidmotion.tv@gmail.com?subject=Infinity%20Flow%203D%20—%20Studio%20license">Buy via PayPal</a>
+      </div>
+      <div class="tier">
+        <h3>Source</h3>
+        <div class="price">US$540</div>
+        <ul>
+          <li>Full Vite + Three.js source bundle</li>
+          <li>White-label rights — reskin &amp; resell</li>
+          <li>All future flow &amp; shader updates</li>
+          <li>Build docs &amp; integration notes</li>
+        </ul>
+        <a class="btn btn-primary" href="mailto:fluidmotion.tv@gmail.com?subject=Infinity%20Flow%203D%20—%20Source%20license">Buy via PayPal</a>
+      </div>
+      <div class="tier hot">
+        <h3>Enterprise</h3>
+        <div class="price">US$1,800</div>
+        <ul>
+          <li>Everything in Source</li>
+          <li>Biometric bridge integration support</li>
+          <li>Priority builds &amp; custom shader themes</li>
+          <li>Direct line to the builder</li>
+        </ul>
+        <a class="btn btn-ghost" href="mailto:fluidmotion.tv@gmail.com?subject=Infinity%20Flow%203D%20—%20Enterprise%20license">Enquire</a>
+      </div>
+    </div>
+    <p class="note">Pay to <code>fluidmotion.tv@gmail.com</code> via PayPal, include your license tier (Personal 49 / Studio 149 / Source 540 / Enterprise 1800) in the note, and the activation + files arrive by email. Site license &amp; custom builds: <a href="mailto:fluidmotion.tv@gmail.com">ask</a>.</p>
+  </section>
+  <section>
+    <h2>Install it</h2>
+    <p class="sub">Thirty seconds, no store, no account.</p>
+    <ol class="steps">
+      <li>Open the <a href="./index.html">live demo</a> on any modern browser.</li>
+      <li>Use the browser menu → <code>Add to Home Screen</code> (mobile) or the install icon in the address bar (desktop).</li>
+      <li>Launch from the icon. Toggle airplane mode — the flow still runs.</li>
+    </ol>
+  </section>
+  <footer>
+    <div>© 2026 Fluid Motion TV · Dragon Nine — "Fluid motion of the future"</div>
+    <div><a href="https://github.com/fluidmotiontv-oss">fluidmotiontv-oss</a> · PayPal: fluidmotion.tv@gmail.com</div>
+  </footer>
+</div>
 </body>
 </html>
