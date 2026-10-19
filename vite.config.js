@@ -13,8 +13,6 @@ export default defineConfig({
         store: resolve(__dirname, 'infinity-flow/store.html'),
         emerald: resolve(__dirname, 'infinity-flow/emerald.html'),
         foamco: resolve(__dirname, 'infinity-flow/foamco.html'),
-        emerald: resolve(__dirname, 'infinity-flow/emerald.html'),
-        foamco: resolve(__dirname, 'infinity-flow/foamco.html'),
         mediaFactory: resolve(__dirname, 'media-factory/index.html'),
         smartAsset: resolve(__dirname, 'smart-asset/index.html')
       }
