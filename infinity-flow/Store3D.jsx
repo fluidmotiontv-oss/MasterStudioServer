@@ -6,6 +6,7 @@ export default function Store3D() {
 
   useEffect(() => {
     const mount = mountRef.current;
+    if (!mount) return;
     
     // Scene, Camera, Renderer setup
     const scene = new THREE.Scene();
