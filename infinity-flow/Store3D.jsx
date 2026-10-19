@@ -12,11 +12,11 @@ export default function Store3D() {
     
     // Scene, Camera, Renderer setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x030305);
-    scene.fog = new THREE.FogExp2(0x030305, 0.035);
+    scene.background = new THREE.Color(0x020508);
+    scene.fog = new THREE.FogExp2(0x020508, 0.03);
 
     const camera = new THREE.PerspectiveCamera(70, mount.clientWidth / mount.clientHeight, 0.1, 1000);
-    camera.position.set(0, 1.6, 4.5);
+    camera.position.set(0, 1.8, 4);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(mount.clientWidth, mount.clientHeight);
@@ -24,54 +24,75 @@ export default function Store3D() {
     renderer.shadowMap.enabled = true;
     mount.appendChild(renderer.domElement);
 
-    // Dynamic Lighting
-    const ambientLight = new THREE.AmbientLight(0xddeeff, 0.6);
+    // Dynamic Coastal Lighting (Golden hour horizon + neon shop warmth)
+    const ambientLight = new THREE.AmbientLight(0x112233, 0.8);
     scene.add(ambientLight);
 
-    const cyanPoint = new THREE.PointLight(0x00ffcc, 3, 20);
-    cyanPoint.position.set(-3, 3, -1);
-    scene.add(cyanPoint);
+    const sunLight = new THREE.DirectionalLight(0xffaa55, 2.0);
+    sunLight.position.set(10, 15, -20);
+    scene.add(sunLight);
 
-    const magentaPoint = new THREE.PointLight(0xff00aa, 3, 20);
-    magentaPoint.position.set(3, 3, -1);
-    scene.add(magentaPoint);
+    const interiorGlow = new THREE.PointLight(0x00ffcc, 2.5, 15);
+    interiorGlow.position.set(0, 3, -1);
+    scene.add(interiorGlow);
 
-    const underShelfLight = new THREE.PointLight(0x00aaff, 2, 10);
-    underShelfLight.position.set(0, 0.8, -3);
-    scene.add(underShelfLight);
-
-    // Room Environment (Walk-in Gallery)
+    // Room & Coastal Deck Structure
     const roomGroup = new THREE.Group();
 
-    // Floor with grid aesthetic
-    const floorGeo = new THREE.PlaneGeometry(20, 20);
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a0a12, roughness: 0.4, metalness: 0.8 });
+    // Weathered Timber Deck Floor
+    const floorGeo = new THREE.PlaneGeometry(16, 24);
+    const floorMat = new THREE.MeshStandardMaterial({ color: 0x3d2817, roughness: 0.8, metalness: 0.1 });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     roomGroup.add(floor);
 
-    // Back Display Wall
-    const wallGeo = new THREE.BoxGeometry(16, 8, 0.5);
-    const wallMat = new THREE.MeshStandardMaterial({ color: 0x12121a, roughness: 0.7 });
-    const wall = new THREE.Mesh(wallGeo, wallMat);
-    wall.position.set(0, 4, -5);
-    roomGroup.add(wall);
+    // Open Back Wall / Glass Frame looking out to Sea & Dunes
+    const frameGeo = new THREE.BoxGeometry(14, 6, 0.4);
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x1a110a, roughness: 0.6 });
+    const frame = new THREE.Mesh(frameGeo, frameMat);
+    frame.position.set(0, 3, -8);
+    roomGroup.add(frame);
 
-    // Floating Glass Shelves
-    const shelfGeo = new THREE.BoxGeometry(10, 0.15, 1.2);
-    const shelfMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.3, roughness: 0.1, metalness: 0.9, emissive: 0x00ffcc, emissiveIntensity: 0.2 });
-    
-    const shelf1 = new THREE.Mesh(shelfGeo, shelfMat);
-    shelf1.position.set(0, 2.0, -3.5);
-    roomGroup.add(shelf1);
+    // Distant Black Sand Dunes & Ocean Horizon backdrop
+    const horizonGeo = new THREE.PlaneGeometry(50, 20);
+    const horizonMat = new THREE.MeshStandardMaterial({ color: 0x05101a, roughness: 0.9, emissive: 0x01050a });
+    const horizon = new THREE.Mesh(horizonGeo, horizonMat);
+    horizon.position.set(0, 4, -22);
+    roomGroup.add(horizon);
 
-    const shelf2 = new THREE.Mesh(shelfGeo, shelfMat);
-    shelf2.position.set(0, 0.9, -3.5);
-    roomGroup.add(shelf2);
+    // Ocean Waves out the back
+    const oceanGeo = new THREE.PlaneGeometry(50, 30);
+    const oceanMat = new THREE.MeshStandardMaterial({ color: 0x004466, roughness: 0.2, metalness: 0.8, emissive: 0x002233, emissiveIntensity: 0.4 });
+    const ocean = new THREE.Mesh(oceanGeo, oceanMat);
+    ocean.rotation.x = -Math.PI / 2;
+    ocean.position.set(0, -0.1, -25);
+    roomGroup.add(ocean);
 
-    // 6 3D Books on Display (Representing Tiers 3, 6, 9)
-    const bookGeo = new THREE.BoxGeometry(0.7, 1.0, 0.18);
+    // Subterranean Glass Tunnel leading into the Sea
+    const tunnelGeo = new THREE.CylinderGeometry(1.2, 1.2, 18, 32, 1, true);
+    const tunnelMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.25, roughness: 0.1, side: THREE.DoubleSide });
+    const tunnel = new THREE.Mesh(tunnelGeo, tunnelMat);
+    tunnel.rotation.x = Math.PI / 2;
+    tunnel.position.set(0, -0.5, -9);
+    roomGroup.add(tunnel);
+
+    // Rustic Timber Book Shelves on the indoor side walls
+    const shelfGeo = new THREE.BoxGeometry(3.5, 0.15, 1.0);
+    const shelfMat = new THREE.MeshStandardMaterial({ color: 0x4a321a, roughness: 0.7 });
+
+    const shelfLeft = new THREE.Mesh(shelfGeo, shelfMat);
+    shelfLeft.position.set(-4, 2.2, -3);
+    shelfLeft.rotation.y = Math.PI / 6;
+    roomGroup.add(shelfLeft);
+
+    const shelfRight = new THREE.Mesh(shelfGeo, shelfMat);
+    shelfRight.position.set(4, 2.2, -3);
+    shelfRight.rotation.y = -Math.PI / 6;
+    roomGroup.add(shelfRight);
+
+    // 6 3D Books on Shelves
+    const bookGeo = new THREE.BoxGeometry(0.6, 0.9, 0.16);
     const bookColors = [0x00ffcc, 0xff00aa, 0x00aaff, 0xffaa00, 0xaa00ff, 0x00ff66];
     const books = [];
 
@@ -79,14 +100,18 @@ export default function Store3D() {
       const mat = new THREE.MeshStandardMaterial({ 
         color: bookColors[i], 
         roughness: 0.2, 
-        metalness: 0.5,
+        metalness: 0.4,
         emissive: bookColors[i],
-        emissiveIntensity: 0.15
+        emissiveIntensity: 0.2
       });
       const book = new THREE.Mesh(bookGeo, mat);
-      const xPos = (i % 3 - 1) * 2.5;
-      const yPos = i < 3 ? 2.6 : 1.5;
-      book.position.set(xPos, yPos, -3.4);
+      if (i < 3) {
+        book.position.set(-4.5 + i * 0.8, 2.8, -3.2);
+        book.rotation.y = Math.PI / 6;
+      } else {
+        book.position.set(3.1 + (i - 3) * 0.8, 2.8, -3.2);
+        book.rotation.y = -Math.PI / 6;
+      }
       book.castShadow = true;
       roomGroup.add(book);
       books.push(book);
@@ -96,7 +121,7 @@ export default function Store3D() {
     const puffGeo = new THREE.SphereGeometry(0.45, 32, 32);
     const puffMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: 0xff4400, emissiveIntensity: 0.9, roughness: 0.2 });
     const superPuff = new THREE.Mesh(puffGeo, puffMat);
-    superPuff.position.set(-6, 3, -2);
+    superPuff.position.set(-5, 3, -1);
     scene.add(superPuff);
 
     // Banner Plane trailing Super Puff
@@ -105,7 +130,7 @@ export default function Store3D() {
     bannerCanvas.width = 512;
     bannerCanvas.height = 128;
     const ctx = bannerCanvas.getContext('2d');
-    ctx.fillStyle = '#050508';
+    ctx.fillStyle = '#020508';
     ctx.fillRect(0, 0, 512, 128);
     ctx.strokeStyle = '#00ffcc';
     ctx.lineWidth = 6;
@@ -157,17 +182,16 @@ export default function Store3D() {
       const elapsedTime = clock.getElapsedTime();
 
       camera.position.x += (mouseX * 0.4 - camera.position.x) * 0.05;
-      camera.position.y += (1.6 + mouseY * 0.15 - camera.position.y) * 0.05;
-      camera.lookAt(0, 1.8, -4);
+      camera.position.y += (1.8 + mouseY * 0.15 - camera.position.y) * 0.05;
+      camera.lookAt(0, 1.6, -6);
 
       books.forEach((book, index) => {
-        book.position.y = (index < 3 ? 2.6 : 1.5) + Math.sin(elapsedTime * 2 + index) * 0.05;
-        book.rotation.y = Math.sin(elapsedTime * 0.8 + index) * 0.15;
+        book.position.y = 2.8 + Math.sin(elapsedTime * 2 + index) * 0.04;
       });
 
-      superPuff.position.x = Math.sin(elapsedTime * 0.7) * 5.5;
+      superPuff.position.x = Math.sin(elapsedTime * 0.7) * 5;
       superPuff.position.y = 2.8 + Math.cos(elapsedTime * 1.4) * 0.3;
-      superPuff.position.z = Math.cos(elapsedTime * 0.7) * 3 - 1;
+      superPuff.position.z = Math.cos(elapsedTime * 0.7) * 3 - 3;
       superPuff.rotation.y = elapsedTime;
 
       renderer.render(scene, camera);
@@ -201,12 +225,12 @@ export default function Store3D() {
   };
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#030305', overflow: 'hidden', fontFamily: 'monospace' }}>
+    <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#020508', overflow: 'hidden', fontFamily: 'monospace' }}>
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
       
       {/* Header & Viva la Resolution Banner */}
       <div style={{ position: 'absolute', top: '25px', left: '25px', color: '#00ffcc', zIndex: 10, pointerEvents: 'none', textShadow: '0 0 10px rgba(0,255,204,0.5)' }}>
-        <h1 style={{ margin: 0, fontSize: '1.5rem', letterSpacing: '3px' }}>INFINITY STORE // WALK-IN 3D</h1>
+        <h1 style={{ margin: 0, fontSize: '1.5rem', letterSpacing: '3px' }}>INFINITY STORE // PORT WAIKATO DECK</h1>
         <p style={{ margin: '6px 0 0 0', color: '#ff00aa', fontSize: '1rem', fontWeight: 'bold', textShadow: '0 0 10px rgba(255,0,170,0.5)' }}>✨ viva la resolution ✨</p>
       </div>
 
