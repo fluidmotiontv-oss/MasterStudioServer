@@ -2,16 +2,23 @@ export class InfinityFlowTouchEngine {
     constructor(containerElement, options = {}) {
         this.container = containerElement;
         this.isDragging = false;
+        this.isPinching = false;
         this.velocity = { x: 0, y: 0 };
         this.position = { x: 0, y: 0 };
         this.lastMousePosition = { x: 0, y: 0 };
         this.lastTime = 0;
-        this.damping = options.damping || 0.92;
+        this.damping = options.damping || 0.90;
         this.sensitivity = options.sensitivity || 0.005;
         this.zoomLevel = 1.0;
         this.minZoom = 0.5;
         this.maxZoom = 3.0;
         this.initialPinchDistance = null;
+        this.maxVelocity = 30;
+
+        // Claim the gestures: stop the browser stealing drags on touch screens
+        this.container.style.touchAction = 'none';
+        this.container.style.userSelect = 'none';
+        this.container.style.webkitUserSelect = 'none';
 
         this.initListeners();
         this.startRenderLoop();
@@ -28,6 +35,7 @@ export class InfinityFlowTouchEngine {
     }
 
     onPointerDown(e) {
+        if (this.isPinching) return;
         this.isDragging = true;
         this.lastMousePosition = { x: e.clientX, y: e.clientY };
         this.velocity = { x: 0, y: 0 };
@@ -36,15 +44,18 @@ export class InfinityFlowTouchEngine {
     }
 
     onPointerMove(e) {
-        if (!this.isDragging) return;
+        if (!this.isDragging || this.isPinching) return;
         const currentTime = performance.now();
-        const deltaTime = Math.max(currentTime - this.lastTime, 1);
+        const deltaTime = Math.max(currentTime - this.lastTime, 8); // burst events lie about dt
         const deltaX = e.clientX - this.lastMousePosition.x;
         const deltaY = e.clientY - this.lastMousePosition.y;
         this.position.x += deltaX * this.sensitivity;
         this.position.y += deltaY * this.sensitivity;
-        this.velocity.x = (deltaX / deltaTime) * 15;
-        this.velocity.y = (deltaY / deltaTime) * 15;
+        // smoothed + capped velocity: fast flicks glide, no more rocket launches
+        const rawVx = (deltaX / deltaTime) * 15;
+        const rawVy = (deltaY / deltaTime) * 15;
+        this.velocity.x = Math.max(-this.maxVelocity, Math.min(this.maxVelocity, this.velocity.x * 0.6 + rawVx * 0.4));
+        this.velocity.y = Math.max(-this.maxVelocity, Math.min(this.maxVelocity, this.velocity.y * 0.6 + rawVy * 0.4));
         this.lastMousePosition = { x: e.clientX, y: e.clientY };
         this.lastTime = currentTime;
     }
@@ -63,6 +74,8 @@ export class InfinityFlowTouchEngine {
 
     onTouchStart(e) {
         if (e.touches.length === 2) {
+            this.isPinching = true;
+            this.isDragging = false;
             this.initialPinchDistance = this.getPinchDistance(e.touches);
         }
     }
@@ -79,6 +92,7 @@ export class InfinityFlowTouchEngine {
 
     onTouchEnd(e) {
         if (e.touches.length < 2) {
+            this.isPinching = false;
             this.initialPinchDistance = null;
         }
     }

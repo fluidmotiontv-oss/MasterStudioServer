@@ -1,6 +1,6 @@
 {
-  "name": "Infinity Flow 3D",
-  "short_name": "Infinity Flow",
+  "name": "FlowTouch",
+  "short_name": "FlowTouch",
   "description": "Spatial 3D interface engine — 432Hz harmonic shaders, touch inertia, biometric bridge. Offline installable.",
   "start_url": ".",
   "scope": ".",

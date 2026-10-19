@@ -1,4 +1,4 @@
-# Infinity Flow 3D
+# FlowTouch
 
 **Space you can touch. Flow you can feel.**
 Flagship spatial interface engine from Fluid Motion TV / Dragon Nine.

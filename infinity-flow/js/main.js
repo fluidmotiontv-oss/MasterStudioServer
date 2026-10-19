@@ -84,8 +84,8 @@ scene.add(particleSystem);
 
 // Initialize Touch Physics Engine
 const touchEngine = new InfinityFlowTouchEngine(container, {
-    damping: 0.93,
-    sensitivity: 0.004
+    damping: 0.90,
+    sensitivity: 0.008
 });
 
 touchEngine.onUpdate = (state) => {

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Druids Lotion of Kombucha - Infinity Flow</title>
+    <link rel="manifest" href="/assets/manifest-Da4Ud30D.json">
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #080e18; font-family: system-ui, sans-serif; color: #fff; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        
+        /* Glassmorphism UI Overlay */
+        #ui-overlay { 
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 12px;
+            background: rgba(13, 27, 42, 0.75); padding: 18px 28px; border-radius: 16px;
+            backdrop-filter: blur(12px); border: 1px solid rgba(64, 145, 108, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .header-title { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: #52b788; margin: 0; font-weight: 600; }
+        
+        .button-group { display: flex; gap: 12px; }
+        
+        button { 
+            background: linear-gradient(135deg, #1b4332, #2d6a4f); color: #fff; border: 1px solid #52b788; 
+            padding: 10px 22px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px;
+            transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(27, 67, 50, 0.4);
+        }
+        button:hover { background: linear-gradient(135deg, #2d6a4f, #40916c); transform: translateY(-1px); }
+        button:active { transform: translateY(1px); }
+
+        #status-display { font-size: 12px; color: #94d2bd; margin: 0; }
+    </style>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+        }
+      }
+    </script>
+  <script type="module" crossorigin src="/assets/infinityFlow-DG4toalS.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="ui-overlay">
+        <p class="header-title">The Druids Lotion of Kombucha</p>
+        <p id="status-display">Status: Standby (Touch or drag to rotate viewport)</p>
+        <div class="button-group">
+            <button id="connect-btn">Connect Biometrics</button>
+            <button id="reset-view-btn">Reset View</button>
+        </div>
+    </div>
+
+</body>
+</html>
