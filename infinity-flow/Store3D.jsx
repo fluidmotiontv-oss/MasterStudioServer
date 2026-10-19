@@ -47,7 +47,7 @@ export default function Store3D() {
     // Room & Compound Structure
     const roomGroup = new THREE.Group();
 
-    // Central Timber Deck Floor (Extended and properly grounded)
+    // Central Timber Deck Floor
     const floorGeo = new THREE.PlaneGeometry(24, 30);
     const floorMat = new THREE.MeshStandardMaterial({ color: 0x3d2817, roughness: 0.7, metalness: 0.1 });
     const floor = new THREE.Mesh(floorGeo, floorMat);
@@ -70,7 +70,7 @@ export default function Store3D() {
     megaWing.position.set(6, 2.25, -4);
     roomGroup.add(megaWing);
 
-    // Open Back View: Ocean Horizon & Perfect Peelers way out at Z = -30
+    // Open Back View: Ocean Horizon & Perfect Peelers
     const horizonGeo = new THREE.PlaneGeometry(80, 30);
     const horizonMat = new THREE.MeshStandardMaterial({ color: 0x040e18, roughness: 0.9, emissive: 0x010306 });
     const horizon = new THREE.Mesh(horizonGeo, horizonMat);
@@ -84,7 +84,7 @@ export default function Store3D() {
     ocean.position.set(0, -0.05, -32);
     roomGroup.add(ocean);
 
-    // Subterranean Glass Tunnel diving smoothly into the sea
+    // Subterranean Glass Tunnel diving into the sea
     const tunnelGeo = new THREE.CylinderGeometry(1.2, 1.2, 24, 32, 1, true);
     const tunnelMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.25, roughness: 0.1, side: THREE.DoubleSide });
     const tunnel = new THREE.Mesh(tunnelGeo, tunnelMat);
@@ -92,7 +92,7 @@ export default function Store3D() {
     tunnel.position.set(0, -0.4, -12);
     roomGroup.add(tunnel);
 
-    // Interactive Display Objects (Properly offset so no clipping occurs)
+    // Interactive Display Objects
     const items = [];
     
     // Left Gallery Art / Book Displays
@@ -106,7 +106,7 @@ export default function Store3D() {
       items.push({ mesh: artMesh, name: `Gallery Art Piece / Ebook Tier ${i + 1}` });
     }
 
-    // Right Megastore Surf/Snow/Wake/Skate Gear & Apparel Displays
+    // Right Megastore Gear & Apparel Displays
     const gearColors = [0xff00aa, 0xffaa00, 0x00ff66];
     const gearNames = ['Surf & Foil Pro Rig', 'Snow & Wake Carbon Setup', 'Extreme Apparel Bundle'];
     for (let i = 0; i < 3; i++) {
@@ -119,15 +119,15 @@ export default function Store3D() {
       items.push({ mesh: gearMesh, name: gearNames[i] });
     }
 
-    // Super Puff Character & Banner Mesh (Clean flight corridor above the open deck)
+    // Super Puff Character & Non-Spinning Readable Banner
     const puffGeo = new THREE.SphereGeometry(0.4, 32, 32);
     const puffMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: 0xff4400, emissiveIntensity: 0.9, roughness: 0.2 });
     const superPuff = new THREE.Mesh(puffGeo, puffMat);
     superPuff.position.set(0, 3.2, -2);
     scene.add(superPuff);
 
-    // Banner Plane trailing Super Puff
-    const bannerGeo = new THREE.PlaneGeometry(3.2, 0.55);
+    // Banner Plane trailing Super Puff (Locked facing camera so text is crystal clear)
+    const bannerGeo = new THREE.PlaneGeometry(3.4, 0.55);
     const bannerCanvas = document.createElement('canvas');
     bannerCanvas.width = 512;
     bannerCanvas.height = 128;
@@ -146,8 +146,8 @@ export default function Store3D() {
     const bannerTexture = new THREE.CanvasTexture(bannerCanvas);
     const bannerMat = new THREE.MeshBasicMaterial({ map: bannerTexture, side: THREE.DoubleSide, transparent: true });
     const bannerMesh = new THREE.Mesh(bannerGeo, bannerMat);
-    bannerMesh.position.set(-1.8, 0, 0);
-    superPuff.add(bannerMesh);
+    bannerMesh.position.set(-2.2, 0, 0); // Positioned cleanly to the side of Super Puff
+    scene.add(bannerMesh); // Added directly to scene so it tracks Super Puff position without spinning
 
     scene.add(roomGroup);
 
@@ -193,11 +193,17 @@ export default function Store3D() {
         item.mesh.rotation.y = Math.sin(elapsedTime * 0.8 + index) * 0.15;
       });
 
-      // Super Puff flight path looping gracefully across the open deck corridor
-      superPuff.position.x = Math.sin(elapsedTime * 0.6) * 4.5;
-      superPuff.position.y = 3.2 + Math.cos(elapsedTime * 1.2) * 0.25;
-      superPuff.position.z = Math.cos(elapsedTime * 0.6) * 2 - 4;
-      superPuff.rotation.y = elapsedTime;
+      // Super Puff flight path
+      const puffX = Math.sin(elapsedTime * 0.6) * 4.5;
+      const puffY = 3.2 + Math.cos(elapsedTime * 1.2) * 0.25;
+      const puffZ = Math.cos(elapsedTime * 0.6) * 2 - 4;
+
+      superPuff.position.set(puffX, puffY, puffZ);
+      superPuff.rotation.y = elapsedTime * 2; // Gentle character spin without affecting banner
+
+      // Banner follows Super Puff position and always faces the camera directly (no spinning!)
+      bannerMesh.position.set(puffX - 1.8, puffY, puffZ);
+      bannerMesh.quaternion.copy(camera.quaternion);
 
       renderer.render(scene, camera);
     };
