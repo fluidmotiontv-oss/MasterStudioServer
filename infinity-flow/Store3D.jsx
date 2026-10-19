@@ -176,10 +176,10 @@ export default function Store3D() {
     buildRoom(6, -4, 0xff00aa);  // right front: megastore
 
     // ── Grassroots First banner across the deck ──
-    const grassCanvas = document.createElement('canvas');
-    grassCanvas.width = 1024; grassCanvas.height = 160;
+    const bannerCanvas = document.createElement('canvas');
+    bannerCanvas.width = 1024; bannerCanvas.height = 160;
     {
-      const x = grassCanvas.getContext('2d');
+      const x = bannerCanvas.getContext('2d');
       x.fillStyle = 'rgba(2,10,6,0.92)'; x.fillRect(0, 0, 1024, 160);
       x.strokeStyle = '#34d399'; x.lineWidth = 6; x.strokeRect(4, 4, 1016, 152);
       x.shadowColor = '#34d399'; x.shadowBlur = 22;
@@ -192,7 +192,7 @@ export default function Store3D() {
     }
     const grassBanner = new THREE.Mesh(
       new THREE.PlaneGeometry(6.8, 1.0),
-      new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(grassCanvas), transparent: true, side: THREE.DoubleSide })
+      new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(bannerCanvas), transparent: true, side: THREE.DoubleSide })
     );
     grassBanner.position.set(0, 5.15, -5.2);
     roomGroup.add(grassBanner);
