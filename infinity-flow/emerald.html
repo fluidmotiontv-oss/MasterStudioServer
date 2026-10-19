@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emerald Outlet // Infinity Store</title>
+<style>
+  :root{
+    --bg:#0a0f14; --panel:#101a22; --panel2:#0d151c;
+    --emerald:#10b981; --emerald-dk:#065f46;
+    --sand:#e7d7b8; --ink:#eaf4f0; --mut:#8fa8a0;
+    --gold:#f5c542;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.55}
+  a{color:var(--emerald);text-decoration:none}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px}
+
+  /* top bar */
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #16232c;font-size:.85rem;color:var(--mut)}
+  .topbar b{color:var(--emerald);letter-spacing:.12em}
+
+  /* hero */
+  .hero{padding:54px 0 34px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:-40%;background:
+    radial-gradient(circle at 50% 20%, rgba(16,185,129,.22), transparent 55%),
+    radial-gradient(circle at 20% 90%, rgba(245,197,66,.10), transparent 50%);
+    pointer-events:none}
+  .badge{display:inline-block;background:var(--emerald-dk);color:#b7f7dd;border:1px solid var(--emerald);
+    border-radius:999px;padding:5px 14px;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}
+  h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.08;letter-spacing:-.02em}
+  h1 .em{color:var(--emerald)}
+  .sub{color:var(--mut);max-width:620px;margin:14px auto 0;font-size:1.02rem}
+  .loc{color:var(--sand);margin-top:10px;font-size:.9rem;letter-spacing:.06em}
+
+  /* shelf */
+  .shelf-title{margin:40px 0 6px;font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;color:var(--mut);text-align:center}
+  .shelf-title::after{content:"";display:block;width:60px;height:2px;background:var(--emerald);margin:10px auto 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin:26px 0 10px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid #1b2a35;border-radius:14px;
+    padding:18px;display:flex;flex-direction:column;gap:10px;transition:transform .18s ease,border-color .18s ease}
+  .card:hover{transform:translateY(-4px);border-color:var(--emerald)}
+  .emoji{font-size:2rem}
+  .card h3{font-size:1.02rem;letter-spacing:.01em}
+  .card p{color:var(--mut);font-size:.86rem;flex:1}
+  .tag{align-self:flex-start;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    background:#132028;border:1px solid #223540;border-radius:6px;padding:3px 8px;color:var(--sand)}
+  .tag.vip{border-color:var(--gold);color:var(--gold)}
+  .btn{display:block;text-align:center;background:var(--emerald);color:#052e21;font-weight:700;
+    border-radius:9px;padding:10px 12px;font-size:.9rem;letter-spacing:.03em}
+  .btn:hover{background:#34d399}
+  .price{font-size:.8rem;color:var(--mut)}
+  .price b{color:var(--ink)}
+
+  /* note strip */
+  .note{margin:34px 0;border:1px dashed #2a3d4a;border-radius:12px;padding:16px 18px;color:var(--mut);font-size:.88rem;background:#0c141b}
+  .note b{color:var(--emerald)}
+
+  /* footer */
+  footer{border-top:1px solid #16232c;margin-top:40px;padding:22px 0 40px;text-align:center;color:var(--mut);font-size:.82rem}
+  footer .outlets{color:var(--sand)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div><b>◈ INFINITY STORE</b> · Outlet #001</div>
+    <div><a href="store.html">← Back to Infinity Store</a></div>
+  </div>
+
+  <section class="hero">
+    <div class="badge">Outlet #001 · Free Listing · Mate's Rates</div>
+    <h1><span class="em">EMERALD</span> BODYBOARD<br>SPECIALISTS</h1>
+    <p class="sub">Australia's oldest bodyboard specialist shop. Longtime sponsor of the Cronulla Bodyboard Club and the Shark Island scene. Curated shelf, hand-picked by the crew.</p>
+    <p class="loc">📍 North of Cronulla · near Boat Harbour, NSW</p>
+  </section>
+
+  <div class="shelf-title">The Shelf</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="emoji">🐍</div>
+      <h3>Viper Swim Fins</h3>
+      <span class="tag vip">★ Legendary Restock</span>
+      <p>The unfindable ones. Emerald tracked these down when nobody else could — the fin that keeps the legend going.</p>
+      <div class="price">Price: <b>ask Emerald</b></div>
+      <a class="btn" href="https://www.facebook.com/EmeraldBodyboard" target="_blank" rel="noopener">Enquire →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🏄</div>
+      <h3>Science Bodyboards</h3>
+      <span class="tag">Boards</span>
+      <p>Template range for prone and DK — from grom to Grand Slam chargers.</p>
+      <div class="price">Price: <b>ask Emerald</b></div>
+      <a class="btn" href="https://www.facebook.com/EmeraldBodyboard" target="_blank" rel="noopener">Enquire →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🥝</div>
+      <h3>NMD Boards</h3>
+      <span class="tag">Boards · Kiwi Made</span>
+      <p>The Kiwi brand. Big-wave proven shapes, built tough for Aussie slabs.</p>
+      <div class="price">Price: <b>ask Emerald</b></div>
+      <a class="btn" href="https://www.facebook.com/EmeraldBodyboard" target="_blank" rel="noopener">Enquire →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🤙</div>
+      <h3>Hubboards</h3>
+      <span class="tag">Boards</span>
+      <p>Pro-model shapes from the Hubbard lineup — made to fly.</p>
+      <div class="price">Price: <b>ask Emerald</b></div>
+      <a class="btn" href="https://www.facebook.com/EmeraldBodyboard" target="_blank" rel="noopener">Enquire →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🔗</div>
+      <h3>Leashes &amp; Plugs</h3>
+      <span class="tag">Hardware</span>
+      <p>Bicep leashes, wrist leashes, plugs and spares. Don't lose your stick at Shark Island.</p>
+      <div class="price">Price: <b>ask Emerald</b></div>
+      <a class="btn" href="https://www.facebook.com/EmeraldBodyboard" target="_blank" rel="noopener">Enquire →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🧴</div>
+      <h3>Wax, Rashies &amp; Extras</h3>
+      <span class="tag">Accessories</span>
+      <p>Tropical wax, fins savers, board bags — the full kit for the Boat Harbour run.</p>
+      <div class="price">Price: <b>ask Emerald</b></div>
+      <a class="btn" href="https://www.facebook.com/EmeraldBodyboard" target="_blank" rel="noopener">Enquire →</a>
+    </div>
+
+  </div>
+
+  <div class="note">
+    🤝 <b>How outlets work:</b> Emerald keeps 100% — this listing is free. Buyers click through straight to the shop. No cut, no middleman — just traffic from the Infinity Store. (Mate's rates.)
+  </div>
+
+  <footer>
+    <div class="outlets">Outlet #001 — Emerald Bodyboard Specialists</div>
+    <div style="margin-top:6px">Powered by 🌊 Infinity Store · Fluid Motion TV</div>
+  </footer>
+
+</div>
+</body>
+</html>
