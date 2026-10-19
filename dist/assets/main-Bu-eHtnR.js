@@ -1,0 +1,1 @@
+import{c as t,j as e,R as o}from"./client-Ds7D3P6J.js";import{M as r}from"./MasterEngineShell-gR7VgsEV.js";t.createRoot(document.getElementById("app")||document.body).render(e.jsx(o.StrictMode,{children:e.jsx(r,{})}));
