@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Foam Co. Outlet // Infinity Store</title>
+<style>
+  :root{
+    --bg:#0a0f14; --panel:#101a22; --panel2:#0d151c;
+    --foam:#22d3ee; --foam-dk:#155e75;
+    --sand:#e7d7b8; --ink:#eaf4f8; --mut:#8fa8b0;
+    --gold:#f5c542;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.55}
+  a{color:var(--foam);text-decoration:none}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #16232c;font-size:.85rem;color:var(--mut)}
+  .topbar b{color:var(--foam);letter-spacing:.12em}
+
+  .hero{padding:54px 0 34px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:-40%;background:
+    radial-gradient(circle at 50% 20%, rgba(34,211,238,.20), transparent 55%),
+    radial-gradient(circle at 80% 90%, rgba(245,197,66,.10), transparent 50%);
+    pointer-events:none}
+  .badge{display:inline-block;background:var(--foam-dk);color:#c5f6ff;border:1px solid var(--foam);
+    border-radius:999px;padding:5px 14px;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}
+  h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.08;letter-spacing:-.02em}
+  h1 .em{color:var(--foam)}
+  .sub{color:var(--mut);max-width:620px;margin:14px auto 0;font-size:1.02rem}
+  .loc{color:var(--sand);margin-top:10px;font-size:.9rem;letter-spacing:.06em}
+
+  .shelf-title{margin:40px 0 6px;font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;color:var(--mut);text-align:center}
+  .shelf-title::after{content:"";display:block;width:60px;height:2px;background:var(--foam);margin:10px auto 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin:26px 0 10px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid #1b2a35;border-radius:14px;
+    padding:18px;display:flex;flex-direction:column;gap:10px;transition:transform .18s ease,border-color .18s ease}
+  .card:hover{transform:translateY(-4px);border-color:var(--foam)}
+  .emoji{font-size:2rem}
+  .card h3{font-size:1.02rem;letter-spacing:.01em}
+  .card p{color:var(--mut);font-size:.86rem;flex:1}
+  .tag{align-self:flex-start;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    background:#132028;border:1px solid #223540;border-radius:6px;padding:3px 8px;color:var(--sand)}
+  .tag.vip{border-color:var(--gold);color:var(--gold)}
+  .btn{display:block;text-align:center;background:var(--foam);color:#062a33;font-weight:700;
+    border-radius:9px;padding:10px 12px;font-size:.9rem;letter-spacing:.03em}
+  .btn:hover{background:#67e8f9}
+  .price{font-size:.8rem;color:var(--mut)}
+  .price b{color:var(--ink)}
+
+  .note{margin:34px 0;border:1px dashed #2a3d4a;border-radius:12px;padding:16px 18px;color:var(--mut);font-size:.88rem;background:#0c141b}
+  .note b{color:var(--foam)}
+
+  footer{border-top:1px solid #16232c;margin-top:40px;padding:22px 0 40px;text-align:center;color:var(--mut);font-size:.82rem}
+  footer .outlets{color:var(--sand)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div><b>◈ INFINITY STORE</b> · Outlet #002</div>
+    <div><a href="https://fluidmotiontv-oss.github.io/MasterStudioServer/infinity-flow/store.html">← Back to Infinity Store</a></div>
+  </div>
+
+  <section class="hero">
+    <div class="badge">Outlet #002 · Hawaii · Est. 2003 · Reimagined 2025</div>
+    <h1>THE FOAM CO.<br><span class="em">HAWAII'S #1 BODYBOARD SHOP</span></h1>
+    <p class="sub">A Maui institution since December 20, 2003. Now owned by world-renowned pro bodyboarder <b>Jacob Romero</b> and his wife Celestial — the shop where the islands' bodyboarding heart beats.</p>
+    <p class="loc">📍 Maui Mall · Kahului, Maui, Hawaii 🌺</p>
+  </section>
+
+  <div class="shelf-title">The Shelf</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="emoji">🏄</div>
+      <h3>No.6 Signature — Crescent Tail</h3>
+      <span class="tag vip">★ Jacob's Pro Model</span>
+      <p>Jacob Romero's signature No.6 shape, crescent tail. The board he charges on worldwide.</p>
+      <div class="price">Price: <b>check shop</b></div>
+      <a class="btn" href="https://thefoamco.com" target="_blank" rel="noopener">Buy at The Foam Co. →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🌊</div>
+      <h3>No.6 Signature — Bat Tail</h3>
+      <span class="tag vip">★ Jacob's Pro Model</span>
+      <p>The bat-tail edition of the No.6 line — looser, faster, built for Hawaiian juice.</p>
+      <div class="price">Price: <b>check shop</b></div>
+      <a class="btn" href="https://thefoamco.com" target="_blank" rel="noopener">Buy at The Foam Co. →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🐍</div>
+      <h3>Swim Fins</h3>
+      <span class="tag">Fins</span>
+      <p>The fin wall — all the top brands for getting into bombs early.</p>
+      <div class="price">Price: <b>check shop</b></div>
+      <a class="btn" href="https://thefoamco.com" target="_blank" rel="noopener">Buy at The Foam Co. →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🔗</div>
+      <h3>Leashes &amp; Plugs</h3>
+      <span class="tag">Hardware</span>
+      <p>Bicep and wrist leashes, plugs, spares. essentials for the Maui lineup.</p>
+      <div class="price">Price: <b>check shop</b></div>
+      <a class="btn" href="https://thefoamco.com" target="_blank" rel="noopener">Buy at The Foam Co. →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🎒</div>
+      <h3>Board Bags &amp; Travel</h3>
+      <span class="tag">Travel</span>
+      <p>Get your stick to Maui in one piece — and home again.</p>
+      <div class="price">Price: <b>check shop</b></div>
+      <a class="btn" href="https://thefoamco.com" target="_blank" rel="noopener">Buy at The Foam Co. →</a>
+    </div>
+
+    <div class="card">
+      <div class="emoji">🧴</div>
+      <h3>Wax, Rashies &amp; Extras</h3>
+      <span class="tag">Accessories</span>
+      <p>Tropical wax, rash vests, fin savers and all the little things.</p>
+      <div class="price">Price: <b>check shop</b></div>
+      <a class="btn" href="https://thefoamco.com" target="_blank" rel="noopener">Buy at The Foam Co. →</a>
+    </div>
+
+  </div>
+
+  <div class="note">
+    🤝 <b>How outlets work:</b> The Foam Co. keeps 100% — this listing is free. Buyers click through straight to the shop's own checkout. No cut, no middleman — just traffic from the Infinity Store.
+  </div>
+
+  <footer>
+    <div class="outlets">Outlet #001 Emerald Bodyboard Specialists · Outlet #002 The Foam Co.</div>
+    <div style="margin-top:6px">Powered by 🌊 Infinity Store · Fluid Motion TV</div>
+  </footer>
+
+</div>
+</body>
+</html>
