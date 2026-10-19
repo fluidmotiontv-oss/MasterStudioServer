@@ -59,10 +59,20 @@ function makeMapTexture() {
   return new THREE.CanvasTexture(c);
 }
 
+// 18 ebook titles across 3 tiers
+const EBOOKS = [
+  ['Fluid Motion Basics', 'Sunset Beach Sessions', 'Board Care Bible', 'Paddling Power', 'Wipeout Survival', 'The 432Hz Handbook'],
+  ['Holo Retail Playbook', 'Grassroots Empire', 'Wave Park Atlas', 'Guides Handbook', 'Bodyboard Shapes 101', 'Shooting the Swell'],
+  ['Mega-Deck Masterplan', 'Viva la Resolution', 'Pro Rider Pathway', 'Infinity Store Ops', 'Dragon9 Field Manual', 'Tasman Peelers']
+];
+const TIER_COLORS = [0x22d3ee, 0xa78bfa, 0xf5c542];
+
 export default function Store3D() {
   const mountRef = useRef(null);
+  const canvasRef = useRef(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [cartStatus, setCartStatus] = useState('');
+  const [walking, setWalking] = useState(false);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -74,12 +84,14 @@ export default function Store3D() {
 
     const camera = new THREE.PerspectiveCamera(70, mount.clientWidth / mount.clientHeight, 0.1, 1000);
     camera.position.set(0, 1.8, 4.0);
+    camera.rotation.order = 'YXZ';
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     mount.appendChild(renderer.domElement);
+    canvasRef.current = renderer.domElement;
 
     // ── Lighting ──
     scene.add(new THREE.AmbientLight(0x152540, 0.9));
@@ -131,6 +143,27 @@ export default function Store3D() {
     const stripR = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 26), new THREE.MeshBasicMaterial({ color: 0xff00aa }));
     stripR.rotation.x = -Math.PI / 2; stripR.position.set(2.6, 0.01, -6); roomGroup.add(stripR);
 
+    // ── Collision walls (VR walk) ──
+    const walls = [];
+    const wall = (x1, x2, z1, z2) => walls.push({ x1, x2, z1, z2 });
+    function roomWalls(cx, cz) {
+      wall(cx - 2.6, cx + 2.6, cz - 3.6, cz - 3.3);      // back
+      wall(cx - 2.25, cx - 1.95, cz - 3.6, cz + 3.3);   // left side
+      wall(cx + 1.95, cx + 2.25, cz - 3.6, cz + 3.3);   // right side
+      wall(cx - 2.6, cx - 0.9, cz + 3.3, cz + 3.6);     // front left
+      wall(cx + 0.9, cx + 2.6, cz + 3.3, cz + 3.6);     // front right
+    }
+    roomWalls(-6, -4); roomWalls(6, -4);
+    function boothWalls(cx, cz) {
+      wall(cx - 1.5, cx + 1.5, cz - 1.15, cz - 0.85);   // back
+      wall(cx - 1.55, cx - 1.25, cz - 1.15, cz + 1.15); // left
+      wall(cx + 1.25, cx + 1.55, cz - 1.15, cz + 1.15); // right
+      wall(cx - 1.25, cx + 1.25, cz + 0.62, cz + 1.08); // counter
+    }
+    boothWalls(-3, -8.6); boothWalls(3, -8.6);
+    // (outlets moved upstairs — glass elevator has an open walkway entrance)
+    const hits = (x, z, r = 0.42) => walls.some(w => x > w.x1 - r && x < w.x2 + r && z > w.z1 - r && z < w.z2 + r);
+
     // ── Enclosed room builder ──
     function buildRoom(cx, cz, accent) {
       const g = new THREE.Group();
@@ -172,10 +205,10 @@ export default function Store3D() {
       roomGroup.add(g);
       return g;
     }
-    buildRoom(-6, -4, 0x00aaff); // left front: studios + gallery
-    buildRoom(6, -4, 0xff00aa);  // right front: megastore
+    buildRoom(-6, -4, 0x00aaff);
+    buildRoom(6, -4, 0xff00aa);
 
-    // ── Grassroots First banner across the deck ──
+    // ── Grassroots First banner ──
     const grassCanvas = document.createElement('canvas');
     grassCanvas.width = 1024; grassCanvas.height = 160;
     {
@@ -212,7 +245,7 @@ export default function Store3D() {
     megaSign.position.set(6, 5.25, -0.5);
     roomGroup.add(megaSign);
 
-    // ── Open booth builder (travel + tech) ──
+    // ── Open booth builder ──
     function buildBooth(cx, cz, accent) {
       const g = new THREE.Group();
       const wallMat = new THREE.MeshStandardMaterial({ color: 0x0d1620, roughness: 0.65 });
@@ -243,7 +276,7 @@ export default function Store3D() {
 
     const pickables = [];
 
-    // ✈️ TRAVEL BOOTH (back-left of tunnel, gold)
+    // ✈️ TRAVEL BOOTH
     buildBooth(-3.0, -8.6, 0xf5c542);
     const mapPanel = new THREE.Mesh(
       new THREE.PlaneGeometry(2.3, 1.15),
@@ -260,7 +293,6 @@ export default function Store3D() {
     travelSign.position.set(-3.0, 3.75, -8.4);
     roomGroup.add(travelSign);
 
-    // brochures on the travel counter
     [0xf5c542, 0x00ffcc, 0xff00aa].forEach((cc, i) => {
       const b = new THREE.Mesh(
         new THREE.BoxGeometry(0.28, 0.04, 0.2),
@@ -278,9 +310,8 @@ export default function Store3D() {
     roomGroup.add(tourDesk);
     pickables.push({ mesh: tourDesk, name: 'Guided Tours — 4× 3-week tours/yr · pro-rider guides' });
 
-    // 💻 SOFTWARE + TECH BOOTH (back-right of tunnel, violet)
+    // 💻 SOFTWARE + TECH BOOTH
     buildBooth(3.0, -8.6, 0xa78bfa);
-    // server rack
     const rackGroup = new THREE.Group();
     for (let i = 0; i < 4; i++) {
       const unit = new THREE.Mesh(
@@ -342,7 +373,7 @@ export default function Store3D() {
     const oceanPos = oceanGeo.attributes.position;
     const oceanBase = oceanPos.array.slice();
 
-    // Rolling peelers down the channel (narrow so they clear the booths)
+    // Rolling peelers down the channel
     const crests = [];
     for (let i = 0; i < 3; i++) {
       const crest = new THREE.Mesh(
@@ -395,17 +426,46 @@ export default function Store3D() {
     tunnel.position.set(0, -0.4, -12);
     roomGroup.add(tunnel);
 
-    // ── LEFT ROOM: studios + gallery ──
+    // ── LEFT ROOM: gallery — ebook wall + art on side wall ──
+    // 3 shelves × 6 books = 18 ebooks
+    const shelfMat = new THREE.MeshStandardMaterial({ color: 0x2a1c10, roughness: 0.6 });
+    for (let s = 0; s < 3; s++) {
+      const shelfY = 1.15 + s * 0.75;
+      const shelfBoard = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.06, 0.4), shelfMat);
+      shelfBoard.position.set(-6, shelfY, -7.2);
+      roomGroup.add(shelfBoard);
+      for (let b = 0; b < 6; b++) {
+        const color = TIER_COLORS[s];
+        const book = new THREE.Mesh(
+          new THREE.BoxGeometry(0.13, 0.5, 0.32),
+          new THREE.MeshStandardMaterial({ color, roughness: 0.5, emissive: color, emissiveIntensity: 0.28 })
+        );
+        book.position.set(-7.55 + b * 0.24, shelfY + 0.28, -7.2);
+        book.rotation.z = (b % 3 - 1) * 0.03;
+        roomGroup.add(book);
+        pickables.push({ mesh: book, name: `📚 ${EBOOKS[s][b]} — $3 (tier ${s + 1})` });
+      }
+    }
+    const ebookSign = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.6, 0.75),
+      new THREE.MeshBasicMaterial({ map: makeTextTexture('📚 EBOOKS — $3 each', '#22d3ee', 'tiers 3 · 6 · 9 — all 18 in the $54 bundle'), transparent: true })
+    );
+    ebookSign.position.set(-6, 3.35, -7.25);
+    roomGroup.add(ebookSign);
+
+    // art pieces on left side wall
     for (let i = 0; i < 3; i++) {
       const artMesh = new THREE.Mesh(
         new THREE.BoxGeometry(0.7, 1.0, 0.12),
         new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.2, metalness: 0.4, emissive: 0x00aaff, emissiveIntensity: 0.35 })
       );
-      artMesh.position.set(-7.3 + i * 1.3, 2.3, -7.2);
+      artMesh.position.set(-8.32, 2.4, -3.6 + i * 1.3);
+      artMesh.rotation.y = Math.PI / 2;
       roomGroup.add(artMesh);
       pickables.push({ mesh: artMesh, name: `Gallery Art Piece / Ebook Tier ${i + 1}` });
     }
 
+    // studio corner
     const desk = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.08, 0.7), new THREE.MeshStandardMaterial({ color: 0x1c2a38, roughness: 0.5 }));
     desk.position.set(-7.3, 0.92, -5.6);
     roomGroup.add(desk);
@@ -493,8 +553,44 @@ export default function Store3D() {
     makeRack(5.2, -5.2, 'Extreme Apparel Rack — tees + hoodies');
     makeRack(7.0, -4.0, 'Rashies + Boardshorts Rack');
 
-    // ── Outlet kiosks ──
-    function makeOutlet(x, z, title, sub, accent, url) {
+    // ── Mezzanine + glass elevator to the outlets ──
+    const mezz = new THREE.Mesh(
+      new THREE.BoxGeometry(6.9, 0.15, 6.7),
+      new THREE.MeshStandardMaterial({ color: 0x2a1c10, roughness: 0.7 })
+    );
+    mezz.position.set(0, 3.55, -3.65);
+    roomGroup.add(mezz);
+
+    // glowing rails
+    const railMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.7 });
+    const railBack = new THREE.Mesh(new THREE.BoxGeometry(6.9, 0.5, 0.05), railMat);
+    railBack.position.set(0, 3.9, -6.95); roomGroup.add(railBack);
+    [-3.42, 3.42].forEach(rx => {
+      const railSide = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.5, 6.6), railMat);
+      railSide.position.set(rx, 3.9, -3.65); roomGroup.add(railSide);
+    });
+    [-2.3, 2.3].forEach(rx => {
+      const railFront = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.5, 0.05), railMat);
+      railFront.position.set(rx, 3.9, -0.35); roomGroup.add(railFront);
+    });
+
+    // glass elevator shaft (opening faces the walkway, +z)
+    const shaft = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.05, 1.05, 3.9, 32, 1, true, 0.7, Math.PI * 2 - 1.4),
+      new THREE.MeshStandardMaterial({ color: 0x9be8ff, transparent: true, opacity: 0.22, roughness: 0.05, side: THREE.DoubleSide })
+    );
+    shaft.position.set(0, 1.95, -1.0);
+    roomGroup.add(shaft);
+
+    const liftPlatform = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.9, 0.9, 0.08, 32),
+      new THREE.MeshStandardMaterial({ color: 0x132028, emissive: 0x00ffcc, emissiveIntensity: 0.4, metalness: 0.5, roughness: 0.3 })
+    );
+    liftPlatform.position.set(0, 0.15, -1.0);
+    roomGroup.add(liftPlatform);
+    pickables.push({ mesh: liftPlatform, name: '🛗 Glass Elevator — step inside to ride up to the outlets' });
+
+    function makeOutlet(x, z, title, sub, accent, url, y = 0) {
       const g = new THREE.Group();
       const ped = new THREE.Mesh(
         new THREE.BoxGeometry(0.5, 1.1, 0.5),
@@ -508,13 +604,14 @@ export default function Store3D() {
       );
       sign.position.y = 1.7;
       g.add(sign);
-      g.position.set(x, 0, z);
+      g.position.set(x, y, z);
       roomGroup.add(g);
       pickables.push({ mesh: sign, name: `Outlet: ${title}`, url, group: g });
       pickables.push({ mesh: ped, name: `Outlet: ${title}`, url, group: g });
     }
-    makeOutlet(-1.5, -1.2, '🐍 EMERALD', '#001 · Cronulla AUS', '#10b981', 'emerald.html');
-    makeOutlet(1.5, -1.2, '🌺 FOAM CO.', '#002 · Maui HI', '#22d3ee', 'foamco.html');
+    // outlets live upstairs on the mezzanine
+    makeOutlet(-2.2, -4.6, '🐍 EMERALD', '#001 · Cronulla AUS', '#10b981', 'emerald.html', 3.63);
+    makeOutlet(2.2, -4.6, '🌺 FOAM CO.', '#002 · Maui HI', '#22d3ee', 'foamco.html', 3.63);
 
     // ── Super Puff + banner ──
     const superPuff = new THREE.Mesh(
@@ -543,13 +640,20 @@ export default function Store3D() {
 
     scene.add(roomGroup);
 
+    // ── VR walk state ──
+    const walkPos = { x: 0, z: 4.5 };
+    let walkY = 1.7;
+    let platY = 0.15;
+    let yaw = 0, pitch = 0;
+    let locked = false;
+    const keys = {};
+
     // ── Interaction ──
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
-    const handleClick = (e) => {
-      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    const tryPick = (cx, cy) => {
+      mouse.x = cx; mouse.y = cy;
       raycaster.setFromCamera(mouse, camera);
       const meshes = pickables.map(it => it.mesh);
       const intersects = raycaster.intersectObjects(meshes);
@@ -561,14 +665,44 @@ export default function Store3D() {
         }
       }
     };
+
+    const handleClick = (e) => {
+      if (e.target !== renderer.domElement) return;
+      if (locked) {
+        tryPick(0, 0); // center of screen
+      } else {
+        tryPick((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
+      }
+    };
     window.addEventListener('click', handleClick);
 
     let mouseX = 0, mouseY = 0;
     const handleMouseMove = (e) => {
-      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+      if (locked) {
+        yaw -= e.movementX * 0.0022;
+        pitch -= e.movementY * 0.0022;
+        pitch = Math.max(-1.2, Math.min(1.2, pitch));
+      } else {
+        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+      }
     };
     window.addEventListener('mousemove', handleMouseMove);
+
+    const handleKey = (e, down) => {
+      keys[e.code] = down;
+      if (down && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
+    };
+    const onKeyDown = (e) => handleKey(e, true);
+    const onKeyUp = (e) => handleKey(e, false);
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+
+    const onLockChange = () => {
+      locked = document.pointerLockElement === renderer.domElement;
+      setWalking(locked);
+    };
+    document.addEventListener('pointerlockchange', onLockChange);
 
     // ── Animation loop ──
     const clock = new THREE.Clock();
@@ -577,9 +711,58 @@ export default function Store3D() {
       animationFrameId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      camera.position.x += (mouseX * 0.4 - camera.position.x) * 0.05;
-      camera.position.y += (1.8 + mouseY * 0.12 - camera.position.y) * 0.05;
-      camera.lookAt(0, 1.6, -6);
+      // glass elevator motion
+      const liftUp = (Math.sin(t * 0.45) + 1) / 2;
+      platY = 0.15 + liftUp * 3.35;
+      liftPlatform.position.y = platY;
+
+      if (locked) {
+        // VR walk movement
+        const speed = (keys['ShiftLeft'] || keys['ShiftRight']) ? 5.2 : 3.0;
+        let ix = 0, iz = 0;
+        if (keys['KeyW'] || keys['ArrowUp']) iz += 1;
+        if (keys['KeyS'] || keys['ArrowDown']) iz -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) ix += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) ix -= 1;
+        const len = Math.hypot(ix, iz) || 1;
+        ix /= len; iz /= len;
+        const sin = Math.sin(yaw), cos = Math.cos(yaw);
+        const dx = (-sin * iz + cos * ix) * speed * 0.016;
+        const dz = (-cos * iz - sin * ix) * speed * 0.016;
+        // elevator ride: step inside the shaft to be carried
+        const dElev = Math.hypot(walkPos.x, walkPos.z + 1.0);
+        const platEye = platY + 1.7;
+        if (dElev < 0.85 && Math.abs(platEye - walkY) < 0.6) {
+          walkY = platEye;
+        } else if (walkY > 2.5) {
+          walkY += (5.33 - walkY) * 0.08; // settle onto mezzanine floor
+        }
+
+        const elevated = walkY > 2.5;
+        if (elevated) {
+          const nx = Math.max(-3.3, Math.min(3.3, walkPos.x + dx));
+          const nz = Math.max(-6.85, Math.min(-0.45, walkPos.z + dz));
+          const kioskHit = (x, z) =>
+            (x > -2.75 && x < -1.65 && z > -5.2 && z < -4.0) ||
+            (x > 1.65 && x < 2.75 && z > -5.2 && z < -4.0);
+          if (!kioskHit(nx, nz)) { walkPos.x = nx; walkPos.z = nz; }
+          else if (!kioskHit(nx, walkPos.z)) { walkPos.x = nx; }
+          else if (!kioskHit(walkPos.x, nz)) { walkPos.z = nz; }
+        } else {
+          const nx = Math.max(-11.2, Math.min(11.2, walkPos.x + dx));
+          const nz = Math.max(-9.4, Math.min(9.5, walkPos.z + dz));
+          if (!hits(nx, nz)) { walkPos.x = nx; walkPos.z = nz; }
+          else if (!hits(nx, walkPos.z)) { walkPos.x = nx; }
+          else if (!hits(walkPos.x, nz)) { walkPos.z = nz; }
+        }
+        camera.position.set(walkPos.x, walkY, walkPos.z);
+        camera.rotation.set(pitch, yaw, 0);
+      } else {
+        camera.position.x += (mouseX * 0.4 - camera.position.x) * 0.05;
+        camera.position.y += (1.8 + mouseY * 0.12 - camera.position.y) * 0.05;
+        camera.position.z += (4.0 - camera.position.z) * 0.05;
+        camera.lookAt(0, 1.6, -6);
+      }
 
       interiorGlow.intensity = 2.5 + Math.sin(t * 2.1) * 0.6;
       surfMegaLight.intensity = 2.3 + Math.sin(t * 1.7 + 1) * 0.5;
@@ -589,7 +772,7 @@ export default function Store3D() {
 
       pickables.forEach((item, index) => {
         if (item.group) return;
-        if (item.mesh.position.y > 1.6) {
+        if (item.mesh.position.y > 1.6 && item.mesh.position.y < 3.0) {
           item.mesh.position.y += Math.sin(t * 2 + index) * 0.0008;
           item.mesh.rotation.y += Math.sin(t * 0.8 + index) * 0.0006;
         }
@@ -631,7 +814,7 @@ export default function Store3D() {
       if (!mount) return;
       camera.aspect = mount.clientWidth / mount.clientHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(mount.clientWidth, mount.clientHeight);
+      renderer.setSize(mount.clientWidth, mount.innerHeight || mount.clientHeight);
     };
     window.addEventListener('resize', handleResize);
 
@@ -639,6 +822,9 @@ export default function Store3D() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleClick);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      document.removeEventListener('pointerlockchange', onLockChange);
       cancelAnimationFrame(animationFrameId);
       if (mount && renderer.domElement) mount.removeChild(renderer.domElement);
     };
@@ -651,6 +837,10 @@ export default function Store3D() {
     }, 1200);
   };
 
+  const enterWalk = () => {
+    canvasRef.current?.requestPointerLock();
+  };
+
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#020508', overflow: 'hidden', fontFamily: 'monospace' }}>
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
@@ -659,6 +849,29 @@ export default function Store3D() {
         <h1 style={{ margin: 0, fontSize: '1.4rem', letterSpacing: '2px' }}>INFINITY STORE // PORT WAIKATO MEGA-DECK</h1>
         <p style={{ margin: '6px 0 0 0', color: '#ff00aa', fontSize: '1rem', fontWeight: 'bold', textShadow: '0 0 10px rgba(255,0,170,0.5)' }}>✨ viva la resolution ✨</p>
       </div>
+
+      {/* VR walk button + hint */}
+      <div style={{ position: 'absolute', top: '105px', left: '25px', zIndex: 10 }}>
+        <button
+          onClick={enterWalk}
+          style={{ background: walking ? 'rgba(245,197,66,0.2)' : 'rgba(0,255,204,0.12)', border: `1px solid ${walking ? '#f5c542' : '#00ffcc'}`, color: walking ? '#f5c542' : '#00ffcc', padding: '10px 18px', borderRadius: '8px', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer', letterSpacing: '1px', boxShadow: '0 0 15px rgba(0,255,204,0.3)' }}
+        >
+          {walking ? '🚶 WALKING — ESC to exit' : '🚶 ENTER VR WALK'}
+        </button>
+        {!walking && (
+          <p style={{ margin: '8px 0 0 0', color: '#8fa8a0', fontSize: '0.72rem', maxWidth: '220px' }}>WASD / arrows to move · click to inspect · walk through doorways · ride the glass lift to the outlets</p>
+        )}
+      </div>
+
+      {/* Crosshair when walking */}
+      {walking && (
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#00ffcc', fontSize: '1.6rem', zIndex: 10, pointerEvents: 'none', textShadow: '0 0 8px rgba(0,255,204,0.8)' }}>+</div>
+      )}
+      {walking && (
+        <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', color: '#8fa8a0', fontSize: '0.78rem', zIndex: 10, pointerEvents: 'none', background: 'rgba(2,5,8,0.6)', padding: '6px 14px', borderRadius: '6px' }}>
+          WASD move · click = inspect · Shift = run · 🛗 lift = outlets upstairs · ESC = exit
+        </div>
+      )}
 
       {selectedItem && (
         <div style={{ position: 'absolute', bottom: '30px', left: '30px', background: 'rgba(0,255,204,0.1)', border: '1px solid #00ffcc', padding: '15px 25px', borderRadius: '8px', color: '#00ffcc', zIndex: 10, backdropFilter: 'blur(6px)' }}>
@@ -673,6 +886,10 @@ export default function Store3D() {
           <p style={{ margin: '0', fontSize: '0.82rem', color: '#b8b8d0', lineHeight: '1.4' }}>18 Ebooks ($3 each across 3, 6, 9) + Megastore Gear Access + Stocking Stuffers.</p>
         </div>
         <div style={{ marginBottom: '12px' }}>
+          <p style={{ margin: '0 0 4px 0', fontSize: '0.95rem', fontWeight: 'bold', color: '#22d3ee' }}>📚 18 Ebooks on the Gallery wall</p>
+          <p style={{ margin: '0', fontSize: '0.82rem', color: '#b8b8d0', lineHeight: '1.4' }}>$3 each — 3 tiers of 6. Click any book in VR walk to inspect.</p>
+        </div>
+        <div style={{ marginBottom: '12px' }}>
           <p style={{ margin: '0 0 4px 0', fontSize: '0.95rem', fontWeight: 'bold', color: '#00aaff' }}>🎁 Gift & Upgrade Perk</p>
           <p style={{ margin: '0', fontSize: '0.82rem', color: '#b8b8d0', lineHeight: '1.4' }}>Every gifted item unlocks a 50% OFF next purchase upgrade token!</p>
         </div>
@@ -682,7 +899,7 @@ export default function Store3D() {
         </div>
 
         <div style={{ marginBottom: '14px' }}>
-          <p style={{ margin: '0 0 6px 0', fontSize: '0.85rem', fontWeight: 'bold', color: '#f5c542' }}>🤝 Rider-Owned Outlets (click the kiosks on deck)</p>
+          <p style={{ margin: '0 0 6px 0', fontSize: '0.85rem', fontWeight: 'bold', color: '#f5c542' }}>🤝 Rider-Owned Outlets — upstairs! Ride the 🛗 glass elevator</p>
           <div style={{ display: 'flex', gap: '8px' }}>
             <a href="emerald.html" style={{ flex: 1, textAlign: 'center', background: 'rgba(16,185,129,0.15)', border: '1px solid #10b981', color: '#10b981', padding: '8px 4px', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 'bold' }}>🐍 Emerald</a>
             <a href="foamco.html" style={{ flex: 1, textAlign: 'center', background: 'rgba(34,211,238,0.15)', border: '1px solid #22d3ee', color: '#22d3ee', padding: '8px 4px', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 'bold' }}>🌺 Foam Co.</a>
