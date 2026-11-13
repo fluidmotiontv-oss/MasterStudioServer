@@ -31,6 +31,15 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
 
+      - name: Build Storefront PWA
+        run: |
+          cd storefront
+          npm install --no-audit --no-fund
+          npm run build
+          cd ..
+          mkdir -p dist/storefront
+          cp -r storefront/dist/* dist/storefront/
+
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
